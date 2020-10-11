@@ -4,25 +4,23 @@ namespace MeteorCqrs\Meteor\src;
 
 trait CreateValidatorFile
 {
-    private function CreateValidatorFile($validator, $parsedPath)
+    private function CreateValidatorFile($validator, $parsedPath, $filePath)
     {
         $validatorClass = class_basename($validator);
 
         $namespace = implode('\\', explode('\\', $parsedPath, -1));
 
-        $validatorParsedPath = $this->validatorpath($validator);
+        $validatorParsedPath = $this->changeName($filePath);
 
         $this->writeValidatorFile($validatorParsedPath, $namespace, $validatorClass);
 
         dd($validatorClass . ' must be implemented!');
     }
 
-    private function validatorpath($validator)
-    {
-        $validatorpath = str_replace('\\', DIRECTORY_SEPARATOR, lcfirst($validator . '.php'));
-
-        return __DIR__ . '/../../../../../' . $validatorpath;
-
+    public function changeName($filePath){
+            $validator = substr($filePath, 0, strpos($filePath, 'Handler')) . 'Validator.php';
+            return $validator;
+       
     }
 
     private function writeValidatorFile($validatorpath, $namespace, $validatorClass)
